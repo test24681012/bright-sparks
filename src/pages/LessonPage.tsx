@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -19,6 +19,7 @@ const LessonPage = () => {
   const [quizStates, setQuizStates] = useState<QuizState[]>([]);
   const [answered, setAnswered] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [interactiveComplete, setInteractiveComplete] = useState(false);
 
   const course = courses.find(c => c.id === courseId);
   const lesson = course?.lessons.find(l => l.id === lessonId);
@@ -51,10 +52,16 @@ const LessonPage = () => {
     setAnswered(true);
   }, [answered, lesson, currentStep]);
 
+  useEffect(() => {
+    setInteractiveComplete(false);
+  }, [currentStep, lessonId]);
+
   if (!course || !lesson) return <div className="p-6 text-foreground">Lesson not found</div>;
 
   const step = lesson.steps[currentStep];
   const isLastStep = currentStep === lesson.steps.length - 1;
+  const requiresInteraction = step.type === 'swipe' || step.type === 'practice';
+  const canContinue = step.type === 'quiz' ? answered : requiresInteraction ? interactiveComplete : true;
 
   if (showCelebration) {
     return (
@@ -95,13 +102,26 @@ const LessonPage = () => {
               />
             ))}
           </div>
+          {answered && step.quiz.explanation && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-lg bg-card shadow-card p-4"
+            >
+              <p className="text-sm text-muted-foreground whitespace-pre-line">{step.quiz.explanation}</p>
+            </motion.div>
+          )}
         </div>
       ) : (
-        <ContentCard step={step} direction={direction} />
+        <ContentCard
+          step={step}
+          direction={direction}
+          onInteractiveComplete={() => setInteractiveComplete(true)}
+        />
       )}
 
       <div className="px-6 pb-8 pt-4">
-        {(step.type !== 'quiz' || answered) && (
+        {canContinue && (
           <motion.button
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

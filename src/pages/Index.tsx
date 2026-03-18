@@ -29,6 +29,7 @@ const Index = () => {
               totalXp={course.totalXp}
               icon={course.icon}
               completedCount={completedCount}
+              featured={course.id === 'ai-office'}
               onClick={() => navigate(`/course/${course.id}`)}
             />
           );
