@@ -6,6 +6,8 @@ import StatsHeader from '@/components/learning/StatsHeader';
 import { courses } from '@/data/courses';
 import { useGameState } from '@/hooks/useGameState';
 
+
+
 const CoursePage = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
@@ -51,7 +53,10 @@ const CoursePage = () => {
               isCompleted={completed}
               isLocked={isLocked}
               index={i}
-              onClick={() => navigate(`/course/${courseId}/lesson/${lesson.id}`)}
+              onClick={() => lesson.interactive 
+                ? navigate(`/course/${courseId}/interactive/${lesson.id}`)
+                : navigate(`/course/${courseId}/lesson/${lesson.id}`)
+              }
             />
           );
         })}

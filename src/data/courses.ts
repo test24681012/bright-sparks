@@ -18,6 +18,7 @@ export interface Lesson {
   subtitle: string;
   xpReward: number;
   steps: LessonStep[];
+  interactive?: boolean;
 }
 
 export interface Course {
@@ -38,7 +39,7 @@ export const courses: Course[] = [
     description: 'Master AI tools to supercharge your daily workflow',
     icon: '🤖',
     lessonsCount: 4,
-    totalXp: 200,
+    totalXp: 250,
     color: '#000',
     lessons: [
       {
@@ -73,10 +74,11 @@ export const courses: Course[] = [
         ],
       },
       {
-        id: 'prompt-basics',
+        id: 'prompt-basics-interactive',
         title: 'Prompt Engineering 101',
-        subtitle: 'Write prompts that work',
-        xpReward: 50,
+        subtitle: 'Interactive: write prompts that work',
+        xpReward: 100,
+        interactive: true,
         steps: [
           {
             type: 'text',
