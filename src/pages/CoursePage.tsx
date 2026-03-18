@@ -5,12 +5,8 @@ import LessonCard from '@/components/learning/LessonCard';
 import StatsHeader from '@/components/learning/StatsHeader';
 import { courses } from '@/data/courses';
 import { useGameState } from '@/hooks/useGameState';
-import { ArrowLeft } from 'lucide-react';
-import { motion } from 'framer-motion';
-import LessonCard from '@/components/learning/LessonCard';
-import StatsHeader from '@/components/learning/StatsHeader';
-import { courses } from '@/data/courses';
-import { useGameState } from '@/hooks/useGameState';
+
+
 
 const CoursePage = () => {
   const { courseId } = useParams();
