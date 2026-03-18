@@ -14,21 +14,18 @@ const LessonPage = () => {
   const navigate = useNavigate();
   const { completeLesson } = useGameState();
 
-  const course = courses.find(c => c.id === courseId);
-  const lesson = course?.lessons.find(l => l.id === lessonId);
-
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [quizStates, setQuizStates] = useState<QuizState[]>([]);
   const [answered, setAnswered] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
 
-  if (!course || !lesson) return <div className="p-6 text-foreground">Lesson not found</div>;
-
-  const step = lesson.steps[currentStep];
-  const isLastStep = currentStep === lesson.steps.length - 1;
+  const course = courses.find(c => c.id === courseId);
+  const lesson = course?.lessons.find(l => l.id === lessonId);
 
   const handleNext = useCallback(() => {
+    if (!lesson) return;
+    const isLastStep = currentStep === lesson.steps.length - 1;
     if (isLastStep) {
       completeLesson(lesson.id, lesson.xpReward);
       setShowCelebration(true);
@@ -38,11 +35,13 @@ const LessonPage = () => {
       setAnswered(false);
       setQuizStates([]);
     }
-  }, [isLastStep, lesson, completeLesson]);
+  }, [currentStep, lesson, completeLesson]);
 
   const handleQuizAnswer = useCallback((index: number) => {
-    if (answered) return;
-    const quiz = step.quiz!;
+    if (answered || !lesson) return;
+    const step = lesson.steps[currentStep];
+    if (!step.quiz) return;
+    const quiz = step.quiz;
     const states = quiz.options.map((_, i) =>
       i === index
         ? i === quiz.correctIndex ? 'correct' : 'wrong'
@@ -50,7 +49,12 @@ const LessonPage = () => {
     ) as QuizState[];
     setQuizStates(states);
     setAnswered(true);
-  }, [answered, step]);
+  }, [answered, lesson, currentStep]);
+
+  if (!course || !lesson) return <div className="p-6 text-foreground">Lesson not found</div>;
+
+  const step = lesson.steps[currentStep];
+  const isLastStep = currentStep === lesson.steps.length - 1;
 
   if (showCelebration) {
     return (
@@ -62,7 +66,6 @@ const LessonPage = () => {
 
   return (
     <div className="min-h-screen bg-background max-w-md mx-auto flex flex-col">
-      {/* Header */}
       <div className="flex items-center justify-between px-4 pt-4">
         <motion.button
           whileTap={{ scale: 0.9 }}
@@ -77,7 +80,6 @@ const LessonPage = () => {
 
       <StoryProgress steps={lesson.steps.length} current={currentStep} />
 
-      {/* Content */}
       {step.type === 'quiz' && step.quiz ? (
         <div className="flex-1 flex flex-col justify-center px-6 py-6 gap-4">
           <h2 className="text-xl font-bold text-foreground">{step.quiz.question}</h2>
@@ -98,7 +100,6 @@ const LessonPage = () => {
         <ContentCard step={step} direction={direction} />
       )}
 
-      {/* Bottom Action */}
       <div className="px-6 pb-8 pt-4">
         {(step.type !== 'quiz' || answered) && (
           <motion.button
