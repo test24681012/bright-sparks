@@ -51,7 +51,10 @@ const CoursePage = () => {
               isCompleted={completed}
               isLocked={isLocked}
               index={i}
-              onClick={() => navigate(`/course/${courseId}/lesson/${lesson.id}`)}
+              onClick={() => lesson.interactive 
+                ? navigate(`/course/${courseId}/interactive/${lesson.id}`)
+                : navigate(`/course/${courseId}/lesson/${lesson.id}`)
+              }
             />
           );
         })}
