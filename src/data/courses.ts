@@ -39,7 +39,7 @@ export const courses: Course[] = [
     description: 'Master AI tools to supercharge your daily workflow',
     icon: '🤖',
     lessonsCount: 4,
-    totalXp: 200,
+    totalXp: 250,
     color: '#000',
     lessons: [
       {
