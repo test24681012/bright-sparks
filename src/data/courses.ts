@@ -74,10 +74,11 @@ export const courses: Course[] = [
         ],
       },
       {
-        id: 'prompt-basics',
+        id: 'prompt-basics-interactive',
         title: 'Prompt Engineering 101',
-        subtitle: 'Write prompts that work',
-        xpReward: 50,
+        subtitle: 'Interactive: write prompts that work',
+        xpReward: 100,
+        interactive: true,
         steps: [
           {
             type: 'text',
