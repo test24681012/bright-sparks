@@ -18,6 +18,7 @@ export interface Lesson {
   subtitle: string;
   xpReward: number;
   steps: LessonStep[];
+  interactive?: boolean;
 }
 
 export interface Course {
